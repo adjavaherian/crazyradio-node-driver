@@ -10,10 +10,13 @@ if (typeof radio !== 'undefined') {
     console.log('found crazyradio: ', radio);
     crazyradio.open(radio, function(){
         console.log('device opened...');
-        crazyradio.setChannel(radio, config.channel, function(success, log){
-            console.log('setChannel cb', success, log);
+        crazyradio.setChannel(radio, config.channel, function(err, data){
+            if (err) {
+                throw err;
+            } else {
+                console.log('setChannel :', config.channel + ' success');
+            }
         });
-        //crazyradio.setDataRate(config.dataRate);
     });
 
 } else {

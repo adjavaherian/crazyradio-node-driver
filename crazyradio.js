@@ -29,12 +29,14 @@ Crazyradio.setChannel = function(device, channel, cb) {
     channel = Number(channel) || 80;
 
     if ((channel < 0) || (channel > 125)) {
-      return cb(false, 'Error: cannot set a channel outside of [0 125]');
-    } else {
-        device.controlTransfer(0x01, channel, new ArrayBuffer(10), new ArrayBuffer(10), new Buffer(10), cb);
-        //return cb(true, 'Channel:' + channel + ' set.');
-    }
 
+        return cb(false, 'Error: cannot set a channel outside of [0 125]');
+
+    } else {
+
+        device.controlTransfer(0x40, 0x01, channel, 0, new Buffer(0), cb);
+
+    }
 };
 
 
