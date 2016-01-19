@@ -292,7 +292,154 @@ describe('CrazyRadio tests', function(){
 
     describe('Interface tests', function() {
 
+        beforeEach(function(){
+            radio = new Crazyradio();
+            radio.debugLevel(4);
+            device = radio.find();
+        });
 
+        it('interface should have two endpoints', function(done) {
+            radio.open(device, function(){
+
+                var iface = device.interface(0);
+                console.log('iface.endpoints', iface.endpoints);
+
+                assert.ok(iface.endpoints.length === 2);
+                radio.close(device, function(){
+                    done();
+                });
+            });
+
+        });
+
+        it('interface should return an endpoint for 1, 129 only', function(done) {
+            radio.open(device, function(){
+
+                var iface = device.interface(0);
+                console.log('iface.endpoint(1)', iface.endpoint(1), iface.altSetting);
+
+                assert.ok(typeof iface.endpoint(1) !== 'undefined');
+                assert.ok(typeof iface.endpoint(129) !== 'undefined');
+                assert.ok(typeof iface.endpoint(130) === 'undefined');
+                radio.close(device, function(){
+                    done();
+                });
+            });
+
+        });
+
+        it('should claim an interface', function(done) {
+            radio.open(device, function(){
+
+                var iface = device.interface(0);
+                iface.claim();
+
+                radio.close(device, function(){
+                    done();
+                });
+            });
+
+        });
+
+        //it('should release an interface', function(done) {
+        //    radio.open(device, function(){
+        //
+        //        var iface = device.interface(0);
+        //        iface.release(true, function(err){
+        //            console.log('err', err);
+        //        });
+        //
+        //        radio.close(device, function(){
+        //            done();
+        //        });
+        //    });
+        //
+        //});
+
+        it('should have inactive kernel driver', function(done) {
+            radio.open(device, function(){
+
+                var iface = device.interface(0);
+                var isActive = iface.isKernelDriverActive();
+                console.log('active', isActive);
+                assert(isActive === false);
+
+                radio.close(device, function(){
+                    done();
+                });
+            });
+
+        });
+
+        it('should have an interface descriptor', function(done) {
+            radio.open(device, function(){
+
+                var iface = device.interface(0);
+
+                console.log('active', iface.descriptor);
+                assert(typeof iface.descriptor !== 'undefined');
+
+                radio.close(device, function(){
+                    done();
+                });
+            });
+
+        });
+
+    });
+
+    describe('Endpoint tests', function() {
+
+        beforeEach(function(){
+            radio = new Crazyradio();
+            radio.debugLevel(4);
+            device = radio.find();
+        });
+
+        it('Endpoint 1 should have out direction', function(done) {
+            radio.open(device, function(){
+
+                var iface = device.interface(0);
+                console.log('iface.endpoint(1)', iface.endpoint(1).direction);
+
+                assert.ok(iface.endpoint(1).direction === 'out');
+                radio.close(device, function(){
+                    done();
+                });
+            });
+
+        });
+
+        it('Endpoint 129 should have in direction', function(done) {
+            radio.open(device, function(){
+
+                var iface = device.interface(0);
+                console.log('iface.endpoint(1)', iface.endpoint(129).direction);
+
+                assert.ok(iface.endpoint(129).direction === 'in');
+                radio.close(device, function(){
+                    done();
+                });
+            });
+
+        });
+
+        it('Endpoints should have right transferType', function(done) {
+            radio.open(device, function(){
+
+                var iface = device.interface(0);
+                console.log('iface.endpoint(1)', iface.endpoint(1).transferType);
+                console.log('iface.endpoint(1)', iface.endpoint(129).transferType);
+
+                assert.ok(iface.endpoint(1).transferType === 2);
+                assert.ok(iface.endpoint(129).transferType === 2);
+
+                radio.close(device, function(){
+                    done();
+                });
+            });
+
+        });
 
 
     });
