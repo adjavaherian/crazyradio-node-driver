@@ -1,0 +1,22 @@
+{
+  "name": "crazyradio-node-driver",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adjavaherian/crazyradio-node-driver.git"
+  },
+  "author": "@adjavaherian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adjavaherian/crazyradio-node-driver/issues"
+  },
+  "homepage": "https://github.com/adjavaherian/crazyradio-node-driver#readme",
+  "dependencies": {
+    "usb": "^1.1.1"
+  }
+}
