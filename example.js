@@ -1,32 +1,32 @@
-var crazyradio = require('./index');
+var Crazyradio = require('./index');
 
 var config = {
     channel: 80,
     dataRate: '250K',
     radioPower : '-18'
 };
-
-var radio = crazyradio.find();
+var radio = new Crazyradio();
+var device = radio.find();
 
 if (typeof radio !== 'undefined') {
     console.log('found crazyradio: ', radio.deviceAddress);
-    crazyradio.open(radio, function(message){
+    radio.open(device, function(message){
         console.log(message);
-        crazyradio.setChannel(radio, config.channel, function(err, data){
+        radio.setChannel(device, config.channel, function(err, data){
             if (err) {
                 throw err;
             } else {
                 console.log('setChannel :', config.channel + ' success');
             }
         });
-        crazyradio.setDataRate(radio, config.dataRate, function(err, data){
+        radio.setDataRate(device, config.dataRate, function(err, data){
             if (err) {
                 throw err;
             } else {
                 console.log('setDataRate :', config.dataRate + ' success');
             }
         });
-        crazyradio.setContinuousCarrier(radio, true, function(err, data){
+        radio.setContinuousCarrier(device, true, function(err, data){
             if (err) {
                 throw err;
             } else {
@@ -35,17 +35,17 @@ if (typeof radio !== 'undefined') {
         });
         setTimeout(function(){
             console.log('waiting for a second');
-            crazyradio.setContinuousCarrier(radio, false, function(err, data){
+            radio.setContinuousCarrier(device, false, function(err, data){
                 if (err) {
                     throw err;
                 } else {
                     console.log('dongle is in normal transfer mode');
 
-                    crazyradio.setAddress(radio, null, function(err, data){
+                    radio.setAddress(device, null, function(err, data){
                        console.log(err, data);
                     });
 
-                    crazyradio.setRadioPower(radio, config.radioPower, function(err, data){
+                    radio.setRadioPower(device, config.radioPower, function(err, data){
                         console.log(err, data);
                     });
 
