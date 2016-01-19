@@ -4,9 +4,11 @@ This is intended to be a fully functional implementation of the crazyradio drive
 You should be able to clone the repo and run the tests and use the radio API.
 
 ## install
+- `npm install -g n && npm install -g mocha`
 - `git clone https://github.com/adjavaherian/crazyradio-node-driver.git`
 - `n 0.12.7` important! change node to 0.12.7
 - `npm install`
+- `node example.js` to try the example or `npm test` to simply run the tests
 
 ## tests
 - it looks like node-usb only works on pre 4.0 node series.  I'm using `node -v` v0.12.7.  
