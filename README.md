@@ -1,7 +1,12 @@
 # crazyradio-node-driver
 
 This is intended to be a fully functional implementation of the crazyradio driver written in javascript.
-You should be able to clone the repo and run the tests and use the radio API.  
+You should be able to clone the repo and run the tests and use the radio API.
+
+## install
+- `git clone https://github.com/adjavaherian/crazyradio-node-driver.git`
+- `n 0.12.7` important! change node to 0.12.7
+- `npm install`
 
 ## tests
 - it looks like node-usb only works on pre 4.0 node series.  I'm using `node -v` v0.12.7.  
