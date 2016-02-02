@@ -444,4 +444,58 @@ describe('CrazyRadio tests', function(){
 
     });
 
+    describe.only('Packet tests', function() {
+
+        var iface = null;
+
+
+        beforeEach(function() {
+            radio = new Crazyradio();
+            radio.debugLevel(4);
+            device = radio.find();
+        });
+
+        afterEach(function(){
+            //iface.release(1, function(err){
+            //    console.log('err after each', err);
+            //    done();
+            //})
+        });
+
+        after(function(){
+            //radio.close(device, function(err){
+            //    done();
+            //});
+        });
+
+        it('should send a packet', function(done){
+
+            radio.open(device, function(){
+                console.log('opening');
+                iface = device.interface(0);
+                iface.claim();
+                var radioOut = iface.endpoint(1);
+                console.log('radioOut.direction', radioOut.direction);
+
+                //Preparing commander packet
+                var packet = new ArrayBuffer(15);
+                var dv = new DataView(packet);
+
+                dv.setUint8(0, 0x30, true);      // CRTP header
+                dv.setFloat32(1, 0, true);    // Roll
+                dv.setFloat32(5, 0, true);   // Pitch
+                dv.setFloat32(9, 0, true);     // Yaw
+                dv.setUint16(13, 0, true);  // Thrust
+
+
+                radioOut.transfer(packet, function(error){
+                    console.log('transfer callback', error);
+                    done();
+                });
+
+            });
+
+        });
+    });
+
 });
