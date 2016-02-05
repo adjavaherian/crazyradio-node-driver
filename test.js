@@ -444,54 +444,81 @@ describe('CrazyRadio tests', function(){
 
     });
 
-    describe.only('Packet tests', function() {
+    describe('Packet tests', function() {
 
-        var iface = null;
-
-
-        beforeEach(function() {
+        before(function() {
             radio = new Crazyradio();
             radio.debugLevel(4);
             device = radio.find();
         });
 
-        afterEach(function(){
-            //iface.release(1, function(err){
-            //    console.log('err after each', err);
-            //    done();
-            //})
+
+        afterEach(function(done){
+            var iface = device.interfaces[0];
+            iface.release(true, function(err){ console.log(err) });
+            done();
+
         });
 
-        after(function(){
-            //radio.close(device, function(err){
-            //    done();
-            //});
+        it.only('should read a packet', function(done){
+
+            console.log('opening', device);
+            device.open();
+            console.log('open', device.interfaces[0]);
+
+            var iface = device.interfaces[0];
+                iface.claim();
+
+            console.log('endpoints[0]', iface.endpoints[0]);
+
+            var radioIn = iface.endpoints[0];
+            var radioOut = iface.endpoints[1];
+
+            console.log('radioOut', radioOut.direction, radioOut.transferType, radioOut.descriptor.bEndpointAddress);
+            console.log('radioIn', radioIn.direction, radioIn.transferType, radioIn.descriptor.bEndpointAddress);
+
+            radioOut.transfer([1], function(err){
+                console.log('out cb', err);
+
+                assert.equal(radioIn, iface.endpoint(0x81));
+
+                radioIn.transfer(64, function(err, data){
+                    console.log('in err / data', err, data);
+                    done();
+                });
+
+            });
+
         });
 
-        it('should send a packet', function(done){
+        it('should send a packet', function(){
+
 
             radio.open(device, function(){
                 console.log('opening');
+
                 iface = device.interface(0);
                 iface.claim();
-                var radioOut = iface.endpoint(1);
-                console.log('radioOut.direction', radioOut.direction);
+
+                var radioOut = iface.endpoints[1];
+
+                console.log('radioOut', radioOut.direction, radioOut.transferType, radioOut.descriptor);
 
                 //Preparing commander packet
                 var packet = new ArrayBuffer(15);
                 var dv = new DataView(packet);
 
                 dv.setUint8(0, 0x30, true);      // CRTP header
-                dv.setFloat32(1, 0, true);    // Roll
-                dv.setFloat32(5, 0, true);   // Pitch
-                dv.setFloat32(9, 0, true);     // Yaw
-                dv.setUint16(13, 0, true);  // Thrust
-
+                dv.setFloat32(1, 0.0, true);    // Roll
+                dv.setFloat32(5, 0.0, true);   // Pitch
+                dv.setFloat32(9, 0.0, true);     // Yaw
+                dv.setUint16(13, 0.0, true);  // Thrust
 
                 radioOut.transfer(packet, function(error){
-                    console.log('transfer callback', error);
+                    console.log('out transfer callback', error);
                     done();
                 });
+
 
             });
 

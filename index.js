@@ -3,6 +3,7 @@
 
 // require the usb library
 var usb = require('usb');
+//console.log('type', usb.LIBUSB_TRANSFER_TYPE_BULK);
 
 // Global configuration values
 var crazyIDs = {
