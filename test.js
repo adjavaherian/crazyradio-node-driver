@@ -452,10 +452,9 @@ describe('CrazyRadio tests', function(){
             device = radio.find();
         });
 
-
         afterEach(function(done){
             var iface = device.interfaces[0];
-            iface.release(true, function(err){ console.log(err) });
+            iface.release(true, function(err){ if (err) console.log(err) });
             done();
 
         });
@@ -464,12 +463,13 @@ describe('CrazyRadio tests', function(){
 
             console.log('opening', device);
             device.open();
-            console.log('open', device.interfaces[0]);
+
+            var dataOut = new ArrayBuffer(15);
 
             var iface = device.interfaces[0];
                 iface.claim();
 
-            console.log('endpoints[0]', iface.endpoints[0]);
+            console.log('endpoints[0]', iface.endpoints);
 
             var radioIn = iface.endpoints[0];
             var radioOut = iface.endpoints[1];
@@ -477,7 +477,9 @@ describe('CrazyRadio tests', function(){
             console.log('radioOut', radioOut.direction, radioOut.transferType, radioOut.descriptor.bEndpointAddress);
             console.log('radioIn', radioIn.direction, radioIn.transferType, radioIn.descriptor.bEndpointAddress);
 
-            radioOut.transfer([1], function(err){
+            assert.equal(radioIn, iface.endpoint(0x81));
+
+            radioOut.transfer(dataOut, function(err){
                 console.log('out cb', err);
 
                 assert.equal(radioIn, iface.endpoint(0x81));

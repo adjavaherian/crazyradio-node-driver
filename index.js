@@ -84,7 +84,6 @@ Crazyradio.prototype.setAddress = function(device, address, cb) {
     device.controlTransfer(0x40, 0x02, 0, 0, new Buffer(5), cb);
 };
 
-
 Crazyradio.prototype.setDataRate = function(device, rate, cb) {
 
     rate = rate || '250K';
@@ -232,22 +231,3 @@ Crazyradio.prototype.getInterfaces = function(device, cb) {
 //    });
 //  };
 //
-//
-//
-//  my.close = function() {
-//    if (state !== "opened") {
-//      return;
-//    }
-//
-//    state = "closing";
-//
-//    chrome.usb.releaseInterface(my.handle, 0, function() {
-//      chrome.usb.closeDevice(my.handle, noop);
-//      state = "closed";
-//    });
-//  };
-//
-//  my.packetSent = noop;
-//
-//  return my;
-//}());
