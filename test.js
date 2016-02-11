@@ -14,6 +14,7 @@ describe('CrazyRadio tests', function(){
             radio = new Crazyradio();
             radio.debugLevel(4);
             device = radio.find();
+            console.log(device);
         });
 
         it('should set Crazyradio driver debug level', function(done){
@@ -452,19 +453,22 @@ describe('CrazyRadio tests', function(){
             device = radio.find();
         });
 
-        afterEach(function(done){
+        after(function(done){
             var iface = device.interfaces[0];
-            iface.release(true, function(err){ if (err) console.log(err) });
-            done();
+            iface.release(true, function(err){
+                if (err) console.log(err);
+                device.close();
+                done();
+            });
 
         });
 
-        it.only('should read a packet', function(done){
+        it('should read a packet', function(done){
 
             console.log('opening', device);
             device.open();
 
-            var dataOut = new ArrayBuffer(15);
+            var dataOut = [255];
 
             var iface = device.interfaces[0];
                 iface.claim();
